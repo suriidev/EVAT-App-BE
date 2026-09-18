@@ -16,8 +16,8 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm \
-                        -v "$WORKSPACE":/app \
-                        -w /app \
+                        -v jenkins_home:/var/jenkins_home \
+                        -w /var/jenkins_home/workspace/EVAT-App-BE-Pipeline \
                         node:18-alpine \
                         sh -c "npm install && npm run test:scoped"
                 '''
