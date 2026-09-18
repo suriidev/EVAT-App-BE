@@ -14,8 +14,13 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm install'
-                sh 'npm run test:scoped'
+                sh '''
+                    docker run --rm \
+                        -v "$WORKSPACE":/app \
+                        -w /app \
+                        node:18-alpine \
+                        sh -c "npm install && npm run test:scoped"
+                '''
             }
         }
     }
