@@ -23,5 +23,23 @@ pipeline {
                 '''
             }
         }
+
+        stage('Code Quality') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        docker run --rm \
+                            -v jenkins_home:/var/jenkins_home \
+                            -w /var/jenkins_home/workspace/EVAT-App-BE-Pipeline \
+                            --network evat-net \
+                            sonarsource/sonar-scanner-cli \
+                            -Dsonar.projectKey=evat-app-be \
+                            -Dsonar.sources=src \
+                            -Dsonar.host.url=http://sonarqube:9000 \
+                            -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
     }
 }
