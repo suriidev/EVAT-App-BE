@@ -14,13 +14,15 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh '''
-                    docker run --rm \
-                        -v jenkins_home:/var/jenkins_home \
-                        -w /var/jenkins_home/workspace/EVAT-App-BE-Pipeline \
-                        node:18-alpine \
-                        sh -c "npm install && npm run test:scoped"
-                '''
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh '''
+                        docker run --rm \
+                            -v jenkins_home:/var/jenkins_home \
+                            -w /var/jenkins_home/workspace/EVAT-App-BE-Pipeline \
+                            node:18-alpine \
+                            sh -c "npm install && npm run test:scoped"
+                    '''
+                }
             }
         }
 
